@@ -1,0 +1,23 @@
+import torch
+
+def pool_path(node_embeds, path_indices):
+    """
+    对每条路径做平均池化，node_embeds: (N, D)
+    path_indices: List[List[int]] 每条路径的节点索引
+    返回: (num_paths, D)
+    """
+    return torch.stack([node_embeds[path].mean(dim=0) for path in path_indices], dim=0)
+
+def encode_node_features(graph, extra_features=None):
+    """
+    示例：将networkx子图编码为节点特征（度数、可选扩展）
+    返回: torch.FloatTensor (N, F)
+    """
+    features = []
+    for node in graph.nodes():
+        degree = graph.degree[node]
+        feat = [degree]
+        if extra_features is not None:
+            feat.extend(extra_features[node])
+        features.append(feat)
+    return torch.tensor(features, dtype=torch.float)

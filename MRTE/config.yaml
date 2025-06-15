@@ -1,0 +1,38 @@
+common:
+  path_pre: "../../"               # ✅ 回退两层，访问 MRTE/MRTE/
+  topo_name: "1221"                # ✅ 对应 region/1221.txt
+  intra_type: "KSP"                 # ✅ 用于 intra: intra/1221_KSP.pickle
+  inter_type: "p3_3_1"              # ✅ 用于 inter: inter/1221_p3_3_1.pickle
+  traffic_type: synthetic
+  device: "cuda"
+  small_ratio: 0.3
+  max_episodes: 3
+  max_ep_steps: 10
+
+agent1:
+  gcn_hidden: 32
+  mlp_hidden: 32
+  gamma: 0.99
+  tau: 0.005
+  actor_lr: 0.0001
+  critic_lr: 0.001
+  buffer_size: 5000
+  minibatch: 64
+
+agent2:
+  state_dim: 20
+  action_dim: 100
+  hidden_dim: 64
+  lr: 0.001
+  gamma: 0.98
+  buffer_size: 3000
+  batch_size: 32
+  agg_interval: 3
+
+
+evaluate:
+  evaluate:
+    agent1_ckpt: checkpoints/agent1_ep100.pt
+    agent2_ckpt: checkpoints/fed_server.pt
+    test_traffic_dir: inputs/traffic/
+    output_path: evaluate_result.csv
